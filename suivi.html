@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Suivi de commande</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<h1>Suivi de votre commande</h1>
+<nav>
+<a href="index.html">Accueil</a>
+<a href="commander.html">Commander</a>
+<a href="contact.html">Contact</a>
+<a href="suivi.html">Suivi</a>
+</nav>
+</header>
+
+<main>
+<label>Entrez votre email / Discord :</label>
+<input type="text" id="user-contact">
+<button id="check-btn">Voir mes commandes</button>
+<div id="user-orders"></div>
+</main>
+
+<script>
+const sheetDBOrders = "https://sheetdb.io/api/v1/3qi9q3lxt2yy9";
+
+document.getElementById('check-btn').addEventListener('click', async ()=>{
+const contact = document.getElementById('user-contact').value;
+const response = await fetch(sheetDBOrders);
+const data = await response.json();
+const userOrders = data.filter(o=>o.contact===contact);
+const div = document.getElementById('user-orders');
+div.innerHTML = '';
+if(userOrders.length===0) return div.innerHTML = '<p>Aucune commande trouvée</p>';
+userOrders.forEach(o=>{
+const p = document.createElement('p');
+p.textContent = `Commande: ${o.type}, Prix: €${o.price}, Statut: ${o.status}`;
+div.appendChild(p);
+});
+});
+</script>
+</body>
+</html>
